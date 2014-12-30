@@ -96,7 +96,11 @@ App.prototype.clearMessages = function() {
 App.prototype.addMessage = function(message){
   // $('<div>').text(message.username + ':' + message.text).appendTo('#chats');
   //$('#chats').append('<div>').text(message.username + ':' + message.text);
-  var newNode = $('<div>').addClass('chat').text(message.createdAt + " : " + message.username + ':' + message.text);
+  var user = $('<span>').addClass('username').text(message.username);
+  var created = $('<span>').addClass('created').text(message.createdAt);
+  var message = $('<span>').addClass('message').text(message.text);
+  var newNode = $('<div>').addClass('chat');
+  newNode.append(user).append(message).append(created);
   $('#chats').append(newNode);
 
 };
