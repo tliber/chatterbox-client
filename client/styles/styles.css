@@ -16,11 +16,13 @@ body {
 }
 
 #main h1 {
+    color: gray;
     margin-top: 0;
     font-size: 35px;
     margin-bottom: 5px;
     padding: 5px;
 }
+
 
 #main h1 span {
     font-style:italic;
@@ -63,6 +65,7 @@ form input[type=text] {
     padding: 5px;
     margin-bottom: 5px;
     background-color: #eee;
+    text-align: left;
 }
 
 .chat .username {
