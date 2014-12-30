@@ -5,6 +5,32 @@ body {
     font-family: arial, sans-serif;
 }
 
+#chats {
+    width: 700px;
+    float: left;
+    background: #888;
+}
+
+#roomSelect {
+
+    width: 450px;
+    float: left;
+    left : 200px;
+    top : 300px;
+    background: lightblue;
+}
+
+.room {
+    padding: 5px;
+    margin: 5px;
+
+}
+
+#friends {
+    background: pink;
+    float: left;
+}
+
 #main {
     width: 500px;
     margin: auto;
@@ -64,16 +90,15 @@ form input[type=text] {
 .chat {
     padding: 5px;
     margin-bottom: 5px;
-    background-color: #eee;
     text-align: left;
 }
-
-.chat .username {
-    font-weight: 800;
+.myFriend {
+    font-weight: bold;
+    color: red;
 }
 
 .chat:hover {
-    background-color: #ddd;
+    background-color: #eee;
 }
 
 .spinner {
@@ -84,4 +109,11 @@ form input[type=text] {
 
 .spinner img {
     padding: 10px;
+}
+
+
+
+#friends{
+    padding: 5px;
+    border: 1px solid black;
 }

@@ -1,4 +1,4 @@
-var makeMessage = function(username, text, roomname, createdAt){
+var makeMessage = function(username, text, roomname){
   var result = {};
 
   if (username === 'undefined')
@@ -9,7 +9,7 @@ var makeMessage = function(username, text, roomname, createdAt){
   result.username = username;
   result.text = text;
   result.roomname = roomname;
-  result.createdAt = createdAt;
+  //result.createdAt = createdAt;
 
   return result;
 
@@ -17,27 +17,22 @@ var makeMessage = function(username, text, roomname, createdAt){
 
 var App = function() {
   this.server = 'https://api.parse.com/1/classes/chatterbox';
+  this.userName = '';
+  this.currentRoom = '';
+  this.roomList = [];
+  this.friendList = [];
 };
 
 App.prototype.init = function(){
-
+  var thisApp = this;
+  $("#sendMessage").on("click", function(){
+      var username = $('#userName').val();
+      var message = $('#message').val();
+      App.prototype.send.call(thisApp,makeMessage(username, message, thisApp.currentRoom));
+  });
 };
+App.prototype.send = function(message){
 
-
-// var App = function(){
-//   obj = {};
-//   // this = {};
-//   obj.init = function(){
-
-//   };
-
-
-//   return obj;
-// };
-
-
-
-  App.prototype.send = function(message){
     $.ajax({
   // always use this url
         url: this.server,
@@ -55,48 +50,61 @@ App.prototype.init = function(){
     });
   };
   App.prototype.fetch = function(){
-    // // if (message === undefined) {
-    //   var message = makeMessage("User", "Message", "Room");
-    // };
-    // $.get("https://api.parse.com/1/classes/chatterbox",
-    //   function(data){
-    //       console.log(data);
-    // });
-    // var data;
-    return $.ajax({
+    var params = "?order=-createdAt";
+    if (this.currentRoom !== "") {
+      params += "&where={\"roomname\":\"" + this.currentRoom + "\"}"
+    }
+    $.ajax({
+
   // always use this url
-        url: this.server + '?order=-createdAt',
+        url: this.server + params,
         type: 'GET',
-        //data: JSON.stringify(message),
-        // dataType : 'object',
-        // contentType: 'application/json',
-        success: function (data) {
-          console.log('chatterbox: Message got');
-          // console.log(data);
-          for (var i = 0; i < data.results.length; i++) {
-            App.prototype.addMessage(makeMessage(data.results[i].username, data.results[i].text, data.results[i].roomname, data.results[i].createdAt));
-          }
-        }
-      //   error: function (data) {
-      // // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-      //     console.error('data');
-      //     console.error('chatterbox: Failed to send message');
-      //   },
-      //   complete: function(status) {
-      //     console.info(status);
-      //   }
+        success: this.showMessages.bind(this)
+
     })
   };
+  App.prototype.showMessages = function(data){
+    App.prototype.clearMessages();
+    for (var i = 0; i < data.results.length; i++) {
+      this.addMessage(makeMessage(data.results[i].username, data.results[i].text, data.results[i].roomname, data.results[i].createdAt));
+      //create rooms
+      var room = data.results[i].roomname;
+      var thisapp = this;
+      //console.log(this)
+      if (this.roomList.indexOf(room) === -1){
+        this.roomList.push(room);
+        $room = $('<span>').addClass('room').text(room);
+        $('#roomSelect').append($room);
+        $room.on('click',function(){
+          thisapp.currentRoom = this.innerHTML;
 
+          // alert(this);
+          // console.log(this.innerHTML);
 
+        //update html page
+        //attach event listeners
+      });
+    }
+  }
+}
 
 App.prototype.clearMessages = function() {
   $('#chats').children().remove();
 };
 App.prototype.addMessage = function(message){
-  // $('<div>').text(message.username + ':' + message.text).appendTo('#chats');
-  //$('#chats').append('<div>').text(message.username + ':' + message.text);
+  var thisApp = this;
   var user = $('<span>').addClass('username').text(message.username);
+  user.on('click', function(){
+    if (thisApp.friendList.indexOf(this.innerHTML) === -1){
+
+      thisApp.friendList.push(this.innerHTML);
+      var newFriend = $('<span>').addClass('friend').text(this.innerHTML);
+      $("#friends").append(newFriend);
+    }
+  })
+  if (this.friendList.indexOf(message.username) > -1) {
+    user.addClass("myFriend");
+  }
   var created = $('<span>').addClass('created').text(message.createdAt);
   var message = $('<span>').addClass('message').text(message.text);
   var newNode = $('<div>').addClass('chat');
@@ -116,10 +124,4 @@ App.prototype.handleSubmit = function(){
 
 };
 
-var app = new App();
-// var app = Object.create(App())
-// // App.prototype.init = function(){
-
-// // };
-// app.fetch()
-
+///var app = new App();

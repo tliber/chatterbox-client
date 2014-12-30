@@ -21,19 +21,27 @@
     </div>
 
     <form id = 'send'>
+      <input type='text' id= 'userName'>
       <input type='text' id ='message'>
-      <input type='submit' value = 'Pop bottles' class = 'submit'>
+      <input type='submit' id="sendMessage" value = 'Pop bottles' class = 'submit'>
     </form>
     <h1>Chats</h1>
     <div id="chats"></div>
     <h4>Rooms</h4>
     <div id='roomSelect'></div>
+    <div id='friends'></div>
+
+
   <script>
   $(document).ready(function(){
 
     var app = new App();
-    var data = app.fetch();
-    console.log(data);
+    // console.log(app)
+    app.init.call(app);
+    //var data = app.fetch();
+    //console.log(data);
+
+    setInterval(function(){app.fetch();}, 1000);
 
   });
   </script>
